@@ -31,29 +31,36 @@ func main() {
 	logger := initLogger(logPath)
 	dbms := query.New(logger, path)
 
-	var fir string
-	fmt.Scanf("%s", &fir)
+	var input string
+	for {
+		fmt.Print("\n\nmenu : create, insert, select, quit\n")
 
-	switch fir {
-	case "create":
-		err := dbms.CreateTable()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to create table", err)
-			return
+		fmt.Scanf("%s", &input)
+
+		switch input {
+		case "create":
+			err := dbms.CreateTable()
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Failed to create table", err)
+				return
+			}
+			break
+
+		case "insert":
+			err := dbms.Insert()
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Failed to query insert", err)
+				return
+			}
+			break
+
+		case "quit":
+			fmt.Print("Bye\n")
+			os.Exit(0)
+
+		default:
+			fmt.Fprintf(os.Stderr, "no menu\n")
+
 		}
-		break
-
-	case "insert":
-		err := dbms.Insert()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to query insert", err)
-			return
-		}
-		break
-
-	default:
-		fmt.Fprintf(os.Stderr, "no menu\n")
-
 	}
-
 }
