@@ -13,6 +13,10 @@ type DBMS struct {
 	FilePath string
 }
 
+var (
+	m = make(map[string][]string)
+)
+
 func New(logger *log.Logger, filePath string) *DBMS {
 	return &DBMS{logger, filePath}
 }
@@ -81,13 +85,20 @@ func (d *DBMS) Insert() error {
 
 	buf := []byte("\n" + value + " " + value2)
 
-	err = ioutil.WriteFile(d.FilePath+"/table.txt", buf, 0644)
+	file, err := os.OpenFile(d.FilePath+"/table.txt", os.O_RDWR|os.O_APPEND, 0644)
 	if err != nil {
-		d.Logger.Printf("failed to file write : %v", err)
+		d.Logger.Printf("failed to file open : %v", err)
+		return err
+	}
+	defer file.Close()
+
+	_, err = file.Write(buf)
+	if err != nil {
+		d.Logger.Printf("failed to file wirte : %v", err)
 		return err
 	}
 
-	indexFile()
+	indexFile(value, value2)
 
 	return nil
 }
@@ -141,9 +152,8 @@ func (d *DBMS) Select() error {
 	return nil
 }
 
-func indexFile() {
-	//	var m map[string]string
-	//	m["test"] = "test"
+func indexFile(value, value2 string) {
+	m[value] = append(m[value], value2)
 
-	//	fmt.Printf("%v", m)
+	fmt.Printf("%v", m[value])
 }
