@@ -44,14 +44,28 @@ func main() {
 				fmt.Fprintf(os.Stderr, "Failed to create table", err)
 				return
 			}
+
+			fmt.Println("테이블이 성공적으로 생성되었습니다.")
 			break
 
 		case "insert":
 			err := dbms.Insert()
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Failed to query insert", err)
+				fmt.Fprintf(os.Stderr, "Failed to insert query", err)
 				return
 			}
+
+			fmt.Println("튜플이 성공적으로 저장되었습니다.")
+			break
+
+		case "select":
+			err := dbms.Select()
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Failed to select query", err)
+				return
+			}
+
+			fmt.Println("데이터 조회 완료!!")
 			break
 
 		case "quit":
